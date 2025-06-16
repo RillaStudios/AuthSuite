@@ -1,7 +1,125 @@
 package com.iforddow.authsuite.service;
 
+import io.jsonwebtoken.*;
+import io.jsonwebtoken.security.Keys;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+
+import java.nio.charset.StandardCharsets;
+import java.security.Key;
+import java.util.Date;
 
 @Service
 public class JwtService {
+
+    // The secret key used to sign the JWT tokens
+    @Value("${jwt.secret}")
+    public String jwtSecret;
+
+    // The expiration time for the access token in milliseconds
+    @Value("${jwt.access_expiration}")
+    public int jwtExpirationMs;
+
+    // The expiration time for the refresh token in milliseconds
+    @Value("${jwt.refresh_expiration}")
+    public int jwtRefreshExpirationMs;
+
+    /*
+    * A method to generate a JWT token for a user.
+    *
+    * @param username The username for which to generate the JWT token.
+    * @return A JWT token as a String.
+    *
+    * @author IFD
+    * @date 2025-06-15
+    * */
+    public String generateJwtToken(String username) {
+        return Jwts.builder()
+                .setSubject(username)
+                .setIssuedAt(new Date())
+                .setExpiration(new Date(System.currentTimeMillis() + jwtExpirationMs))
+                .signWith(getKey())
+                .compact();
+    }
+
+    /*
+    * A method to generate a refresh token for a user.
+    *
+    * @param username The username for which to generate the refresh token.
+    * @return A JWT refresh token as a String.
+    *
+    * @author IFD
+    * @date 2025-06-15
+    * */
+    public String generateRefreshToken(String username) {
+        return Jwts.builder()
+                .setSubject(username)
+                .setIssuedAt(new Date())
+                .setExpiration(new Date(System.currentTimeMillis() + jwtRefreshExpirationMs))
+                .signWith(getKey())
+                .compact();
+    }
+
+    /*
+    * A method to extract the username from a JWT token.
+    *
+    * @param token The JWT token from which to extract the username.
+    * @return The username extracted from the token.
+    *
+    * @author IFD
+    * @date 2025-06-15
+    * */
+    public String getUsernameFromToken(String token) {
+        return Jwts.parserBuilder()
+                .setSigningKey(getKey()).build()
+                .parseClaimsJws(token)
+                .getBody()
+                .getSubject();
+    }
+
+    /*
+    * A method to validate a JWT token.
+    *
+    * @param token The JWT token to validate.
+    * @return true if the token is valid, false otherwise.
+    *
+    * @author IFD
+    * @date 2025-06-15
+    * */
+    public boolean validateJwtToken(String token) {
+        try {
+            Jwts.parserBuilder()
+                .setSigningKey(getKey())
+                .build()
+                .parseClaimsJws(token);
+            return true;
+        } catch (SecurityException e) {
+            System.out.println("Invalid JWT signature: " + e.getMessage());
+        } catch (MalformedJwtException e) {
+            System.out.println("Invalid JWT token: " + e.getMessage());
+        } catch (ExpiredJwtException e) {
+            System.out.println("JWT token is expired: " + e.getMessage());
+        } catch (UnsupportedJwtException e) {
+            System.out.println("JWT token is unsupported: " + e.getMessage());
+        } catch (IllegalArgumentException e) {
+            System.out.println("JWT claims string is empty: " + e.getMessage());
+        } catch (Exception e) {
+            System.out.println("JWT validation error: " + e.getMessage());
+        }
+        return false;
+    }
+
+    /*
+    * A method to get the signing key for JWT tokens.
+    *
+    * @return The signing key as a Key object.
+    *
+    * @author IFD
+    * @date 2025-06-15
+    * */
+    public Key getKey() {
+        return Keys.hmacShaKeyFor(jwtSecret.getBytes(StandardCharsets.UTF_8));
+    }
+
+
 }
