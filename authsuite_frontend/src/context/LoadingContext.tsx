@@ -8,7 +8,7 @@ export const LoadingProvider = ({ children }: { children: ReactNode }) => {
   // This hook is used to manage loading state in components.
   // It provides a simple way to show and hide loading indicators.
 
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   // Function to toggle the loading state
   const toggleLoading = (state: boolean) => {
