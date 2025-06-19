@@ -8,12 +8,19 @@ import { useLoading } from "../context/LoadingContext";
 import { Center, Loader } from "@mantine/core";
 import AuthSuiteSettings from "../pages/AuthSuiteSettings";
 
+/* 
+A React component that serves as the main router for the application,
+handling routing and authentication logic. 
+
+@author IFD
+@date 2025-06-15
+*/
 export default function AppRouter() {
+  // isAuthenticated is a boolean indicating if the user is authenticated
   const { isAuthenticated } = useAuth();
 
+  // loading is a boolean indicating if the application is currently loading
   const { loading } = useLoading();
-
-  console.log("isAuthenticated:", isAuthenticated);
 
   return loading ? (
     <Center h={"100vh"}>

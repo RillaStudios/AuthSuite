@@ -11,10 +11,9 @@ import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
-
 import java.util.Map;
 
-/*
+/**
 * A controller for handling authentication-related requests.
 *
 * @author IFD
@@ -41,7 +40,7 @@ public class AuthController {
         return authService.register(registerRequest);
     }
 
-    /*
+    /**
     * A method to handle user login requests.
     *
     * @param loginRequest The request object containing user login details.
@@ -56,7 +55,7 @@ public class AuthController {
         return authService.login(loginRequest, response);
     }
 
-    /*
+    /**
     * A method to handle token refresh requests.
     *
     * @param refreshToken The refresh token from the request cookie.
@@ -66,7 +65,7 @@ public class AuthController {
     * @date 2025-06-15
     * */
     @PostMapping("/refresh")
-    public ResponseEntity<Map<String, String>> refresh(@CookieValue("auth_rt") String refreshToken) {
+    public ResponseEntity<Map<String, Object>> refresh(@CookieValue("auth_rt") String refreshToken) {
         // Delegate the refresh request to the AuthService
         return authService.refreshToken(refreshToken);
     }

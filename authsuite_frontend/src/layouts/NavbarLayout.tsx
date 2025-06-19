@@ -4,6 +4,7 @@ import {
   Burger,
   Code,
   Group,
+  Image,
   Title,
 } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
@@ -36,6 +37,7 @@ export default function NavbarLayout({
               hiddenFrom="sm"
               size="sm"
             />
+            <Image src={"/logo.png"} w={25} />
             <Title order={2}>AuthSuite</Title>
             <Code
               fw={700}

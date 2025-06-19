@@ -1,5 +1,5 @@
 import { createTheme, Loader } from "@mantine/core";
-import LoaderCube from "../../components/loader/LoaderCube";
+import LoaderCube from "../components/loader/LoaderCube";
 
 /* 
 A Crimson theme for the application.

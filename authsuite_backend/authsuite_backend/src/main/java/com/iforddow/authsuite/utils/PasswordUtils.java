@@ -1,5 +1,13 @@
 package com.iforddow.authsuite.utils;
 
+/**
+* A utility class for validating passwords in the AuthSuite application.
+* This class provides methods to validate passwords against specific criteria,
+* including length, character types, and special characters.
+*
+* @author IFD
+* @since 2025-06-14
+* */
 public class PasswordUtils {
 
     private static final int MIN_LENGTH = 8;

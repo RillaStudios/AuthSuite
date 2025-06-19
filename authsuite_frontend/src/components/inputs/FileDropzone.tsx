@@ -3,6 +3,15 @@ import { Dropzone, IMAGE_MIME_TYPE } from "@mantine/dropzone";
 import { IconPhoto, IconUpload, IconX } from "@tabler/icons-react";
 import type { Accept, FileRejection } from "react-dropzone";
 
+/* 
+A React component for a file dropzone that allows users to 
+drag and drop files or select them via a file dialog.
+This component uses Mantine's Dropzone and Input components 
+to create a user-friendly interface for file uploads.
+
+@author IFD
+@date 2025-06-16
+*/
 export default function FileDropzone({
   label,
   description,
@@ -55,7 +64,8 @@ export default function FileDropzone({
               Drag image here or click to select file
             </Text>
             <Text size="sm" c="dimmed" inline mt={7}>
-              Attach as many files as you like, each file should not exceed 5mb
+              Attach as many files as you like, each file should not exceed{" "}
+              {maxSize / 1024}KB
             </Text>
           </div>
         </Group>

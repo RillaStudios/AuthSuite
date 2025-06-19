@@ -1,3 +1,5 @@
+import type { UserType } from "./UserType";
+
 /* 
 A TypeScript interface for the authentication context.
 
@@ -5,7 +7,7 @@ A TypeScript interface for the authentication context.
 @date 2025-06-15
 */
 export default interface AuthContextType {
-  user: any;
+  user: UserType | null;
   isAuthenticated: boolean;
   accessToken: string | null;
   login: (username: string, password: string) => Promise<void>;

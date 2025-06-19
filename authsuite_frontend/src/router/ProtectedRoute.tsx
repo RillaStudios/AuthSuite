@@ -4,12 +4,18 @@ import type React from "react";
 import { useLoading } from "../context/LoadingContext";
 import { Center, Loader } from "@mantine/core";
 
+/* 
+A React component that serves as a protected route,
+ensuring that only authenticated users can access the wrapped children components.
+If the user is not authenticated, they are redirected to the home page.
+
+@author IFD
+@date 2025-06-16
+*/
 export function ProtectedRoute({ children }: { children: React.ReactNode }) {
   const { isAuthenticated } = useAuth();
 
   const { loading } = useLoading();
-
-  console.log("isAuthenticated for Protected Route:", isAuthenticated);
 
   return loading ? (
     <Center h={"100vh"}>

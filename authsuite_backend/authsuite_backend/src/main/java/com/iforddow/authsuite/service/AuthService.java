@@ -14,7 +14,6 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.AccountStatusException;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -41,7 +40,7 @@ public class AuthService {
     private final JwtService jwtService;
     private final ServletResponse servletResponse;
 
-    /*
+    /**
     * A method to handle user registration.
     *
     * @param registerRequest The request object containing user registration details.
@@ -115,7 +114,7 @@ public class AuthService {
 
     }
 
-    /*
+    /**
     * A method to handle user login.
     *
     * @param loginRequest The request object containing user login details.
@@ -171,7 +170,7 @@ public class AuthService {
 
     }
 
-    /*
+    /**
     * A method to handle token refresh requests.
     *
     * @param refreshToken The refresh token from the request cookie.
@@ -182,14 +181,29 @@ public class AuthService {
     * @author IFD
     * @date 2025-06-15
     * */
-    public ResponseEntity<Map<String, String>> refreshToken(String refreshToken) {
+    public ResponseEntity<Map<String, Object>> refreshToken(String refreshToken) {
 
         if (jwtService.validateJwtToken(refreshToken)) {
 
             String username = jwtService.getUsernameFromToken(refreshToken);
             String newAccessToken = jwtService.generateJwtToken(username);
 
-            return ResponseEntity.ok(Map.of("accessToken", newAccessToken));
+            // Get the user from the database
+            Optional<User> user = userRepository.findByEmail(username);
+
+            if (user.isEmpty()) {
+                throw new ResourceNotFoundException("User not found with email: " + username);
+            }
+
+            // Update the user's last active time
+            user.get().setLastActive(new Date().toInstant());
+
+            // Save the updated user back to the database
+            userRepository.save(user.get());
+
+            UserDTO userDTO = new UserDTO(user.get());
+
+            return ResponseEntity.ok(Map.of("accessToken", newAccessToken, "user", userDTO));
 
         } else {
 

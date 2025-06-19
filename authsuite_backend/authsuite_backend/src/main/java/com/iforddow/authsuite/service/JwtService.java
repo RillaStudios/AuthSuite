@@ -9,6 +9,14 @@ import java.nio.charset.StandardCharsets;
 import java.security.Key;
 import java.util.Date;
 
+/**
+ * A service for handling JWT (JSON Web Token) operations.
+ * This service provides methods to generate, validate,
+ * and extract information from JWT tokens.
+ *
+ * @author IFD
+ * @date 2025-06-15
+ * */
 @Service
 public class JwtService {
 
@@ -24,7 +32,7 @@ public class JwtService {
     @Value("${jwt.refresh_expiration}")
     public int jwtRefreshExpirationMs;
 
-    /*
+    /**
     * A method to generate a JWT token for a user.
     *
     * @param username The username for which to generate the JWT token.
@@ -42,7 +50,7 @@ public class JwtService {
                 .compact();
     }
 
-    /*
+    /**
     * A method to generate a refresh token for a user.
     *
     * @param username The username for which to generate the refresh token.
@@ -60,7 +68,7 @@ public class JwtService {
                 .compact();
     }
 
-    /*
+    /**
     * A method to extract the username from a JWT token.
     *
     * @param token The JWT token from which to extract the username.
@@ -77,7 +85,7 @@ public class JwtService {
                 .getSubject();
     }
 
-    /*
+    /**
     * A method to validate a JWT token.
     *
     * @param token The JWT token to validate.
@@ -109,7 +117,7 @@ public class JwtService {
         return false;
     }
 
-    /*
+    /**
     * A method to get the signing key for JWT tokens.
     *
     * @return The signing key as a Key object.

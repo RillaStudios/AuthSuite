@@ -11,6 +11,7 @@ import { jwtDecode } from "jwt-decode";
 import { AUTH_API_ENDPOINTS } from "../config/auth_api_config";
 import type AuthContextType from "../types/AuthContextType";
 import { useLoading } from "./LoadingContext";
+import type { UserType } from "../types/UserType";
 
 // A React context for managing authentication state.
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -26,7 +27,7 @@ and refreshing the access token.
 */
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   // State to hold user information and authentication status
-  const [user, setUser] = useState<any>(null);
+  const [user, setUser] = useState<UserType | null>(null);
   // Access token state
   const [accessToken, setAccessToken] = useState<string | null>(null);
   // Set the access token in axios defaults if it exists
@@ -168,25 +169,33 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   @date 2025-06-15
   */
   const refresh = async () => {
-    try {
-      const response = await axios.post(
-        AUTH_API_ENDPOINTS.REFRESH,
-        {},
-        { withCredentials: true },
-      );
-      const { accessToken } = response.data;
-      if (accessToken) {
-        setAccessToken(accessToken);
-        setIsAuthenticated(true);
-        return true;
-      }
-      return false;
-    } catch {
-      setUser(null);
-      setIsAuthenticated(false);
-      setAccessToken(null);
-      return false;
-    }
+    toggleLoading(true);
+
+    let refreshed = false;
+
+    await axios
+      .post(AUTH_API_ENDPOINTS.REFRESH, {}, { withCredentials: true })
+      .then((response) => {
+        const { accessToken, user } = response.data;
+        if (accessToken) {
+          setAccessToken(accessToken);
+          setIsAuthenticated(true);
+          setUser(user || {});
+          refreshed = true;
+        }
+      })
+      .catch((error) => {
+        console.error("Error refreshing access token:", error);
+        setUser(null);
+        setIsAuthenticated(false);
+        setAccessToken(null);
+        refreshed = false;
+      })
+      .finally(() => {
+        toggleLoading(false);
+      });
+
+    return refreshed;
   };
 
   /* 

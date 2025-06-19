@@ -23,16 +23,26 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+* A configuration class for setting up security in the Spring Boot application.
+* This class configures the security filter chain, password encoding, and JWT authentication.
+*
+* @author IFD
+* @since 2025-06-15
+* */
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity(securedEnabled = true, jsr250Enabled = true)
 @RequiredArgsConstructor
 public class SecurityConfig {
 
+    // JwtService is used to handle JWT token operations such as validation and parsing
     private final JwtService jwtService;
+
+    // UserDetailsService is used to load user-specific data during authentication
     private final UserDetailsService userDetailsService;
 
-    /*
+    /**
     * A bean to provide the SecurityFilterChain for the application.
     * This filter chain configures the security settings for HTTP requests,
     * including CSRF protection, session management, and authorization rules.
@@ -83,7 +93,7 @@ public class SecurityConfig {
         return new DelegatingPasswordEncoder(defaultEncodingId, encoders);
     }
 
-    /*
+    /**
     * A bean to provide the AuthenticationManager for the application.
     * This manager is used to authenticate users based on their credentials.
     *
@@ -98,9 +108,8 @@ public class SecurityConfig {
         return config.getAuthenticationManager();
     }
 
-    /*
+    /**
     * A bean to provide the JwtFilter for the application.
-    *
     * This filter is responsible for validating JWT tokens in incoming requests
     * and setting the authentication context if the token is valid.
     *

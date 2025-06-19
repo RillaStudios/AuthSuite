@@ -5,4 +5,5 @@ export const AUTH_API_ENDPOINTS = {
     REGISTER: `${AUTH_API_BASE_URL}/register`,
     LOGOUT: `${AUTH_API_BASE_URL}/logout`,
     REFRESH: `${AUTH_API_BASE_URL}/refresh`,
+    THEME: `${AUTH_API_BASE_URL}/theme`,
 }
